@@ -1,0 +1,32 @@
+{
+    "name": "aura/asset",
+    "description": "Asset management for aura v2",
+    "license": "BSD-2-Clause",
+    "authors": [
+        {
+            "name": "Hari KT",
+            "email": "kthari85@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "aura/web-kernel":"2.*@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Aura\\Asset\\":"src/",
+            "Aura\\Asset\\_Config\\":"config/"
+        }
+    },
+    "extra": {
+        "aura": {
+            "type": "project",
+            "config": {
+                "common": "Aura\\Asset\\_Config\\Common"
+            }
+        },
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
+    }
+}
