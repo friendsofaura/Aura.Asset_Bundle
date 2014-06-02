@@ -10,7 +10,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "aura/web-kernel":"2.*@dev"
+        "aura/web":"2.*@dev"
     },
     "autoload": {
         "psr-4": {
