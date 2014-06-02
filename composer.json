@@ -1,5 +1,5 @@
 {
-    "name": "aura/asset",
+    "name": "aura/asset-bundle",
     "description": "Asset management for aura v2",
     "license": "BSD-2-Clause",
     "authors": [
@@ -14,15 +14,15 @@
     },
     "autoload": {
         "psr-4": {
-            "Aura\\Asset\\":"src/",
-            "Aura\\Asset\\_Config\\":"config/"
+            "Aura\\Asset_Bundle\\":"src/",
+            "Aura\\Asset_Bundle\\_Config\\":"config/"
         }
     },
     "extra": {
         "aura": {
             "type": "project",
             "config": {
-                "common": "Aura\\Asset\\_Config\\Common"
+                "common": "Aura\\Asset_Bundle\\_Config\\Common"
             }
         },
         "branch-alias": {
