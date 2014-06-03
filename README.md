@@ -1,29 +1,28 @@
-# Aura.Asset
+# Aura.Asset_Bundle
 
-Asset management for [Aura.Web_Project](https://github.com/auraphp/Aura.Web_Project) package.
+Asset management for PHP.
 
 ## Foreword
 
 ### Requirements
 
-This package requires PHP 5.4 or later. Unlike Aura library packages, this 
-asset package has userland dependencies, which themselves may have other
-dependencies:
+This package requires PHP 5.3 or later. Unlike Aura library packages, this 
+asset package has userland dependencies:
 
-- [aura/web-kernel](https://packagist.org/packages/aura/web-kernel)
+- [aura/web](https://packagist.org/packages/aura/web)
 
 ### Installation
 
-This asset is installable and autoloadable via Composer with the following
+This asset-bundle is installable and autoloadable via Composer with the following
 `require` element in your `composer.json` file:
 
     "require": {
-        "aura/asset": "2.*@dev"
+        "aura/asset-bundle": "2.*@dev"
     }
 
 ### Tests
 
-Want to write some tests, before that discuss with Paul M Jones his thoughts.
+
 
 ### PSR Compliance
 
@@ -41,7 +40,7 @@ To ask questions, provide feedback, or otherwise communicate with the Aura commu
 ## Structure of Package
 
 Assume you have a `Vendor.Package`. All your assets should be in the 
-`web` folder. The folder names `css`, `images`, `js` can be according to your loveable names.
+`web` folder. The folder names `css`, `images`, `js` can be according to your preffered name.
 
 
 ```bash
