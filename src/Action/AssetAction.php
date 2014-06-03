@@ -2,38 +2,28 @@
 namespace Aura\Asset_Bundle\Action;
 
 use Aura\Web\Request;
-use Aura\Web\Response;
 use Aura\Asset_Bundle\Domain\AssetService;
-use Aura\Asset_Bundle\Exception\NotFound;
+use Aura\Asset_Bundle\Responder\AssetResponder;
 
 class AssetAction
-{
+{   
     /**
      * 
-     * A web (not HTTP!) request object.
+     * A web responder
      * 
-     * @var Request
+     * @var AssetResponder
      * 
      */
-    protected $request;
+    protected $responder;
     
     /**
      * 
-     * A web (not HTTP!) response object.
+     * Asset service
      * 
-     * @var Request
-     * 
-     */
-    protected $response;
-    
-    /**
-     * 
-     * FormatTypes
-     * 
-     * @var $format_types;
+     * @var AssetService
      * 
      */
-    protected $format_types;
+    protected $asset_service;
     
     /**
      * 
@@ -44,27 +34,23 @@ class AssetAction
      * @param Response $response A web response object.
      * 
      */
-    public function __construct(
-        Request $request,
-        Response $response,
-        FormatTypes $format_types,
-        AssetService $asset_service
-    ) {
-        $this->request = $request;
-        $this->response = $response;
-        $this->format_types = $format_types;
-        $this->asset_service = $asset_service;
+    public function __construct(        
+        AssetResponder $responder,
+        AssetService $asset_service        
+    ) {        
+        $this->responder = $responder;
+        $this->asset_service = $asset_service;        
     }
     
     public function __invoke($vendor = null, $package = null, $file = null, $format = null)
-    {
+    {        
+        $asset_path = $this->asset_service->getAssetPath($vendor, $package, $file, $format);
         try {
-            $content = $this->asset_service->getAssetContents($vendor, $package, $file, $format);
-            $this->response->headers->set('Content-Type', $this->format_types->getContentType($format));
-        } catch (NotFound $e) {
-            $content = "Asset not found: " . $e->getMessage();
-            $this->response->status->set('404', 'Not Found', '1.1');            
-        }
-        $this->response->content->set($content);        
+            $data['asset'] = $this->asset_service->readFile($asset_path);
+            $data['format'] = $format;
+            $this->responder->setData($data);
+        } catch (NotFound $e) {            
+        }        
+        return $this->responder;
     }
 }

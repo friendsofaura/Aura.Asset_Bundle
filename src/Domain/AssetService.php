@@ -4,7 +4,7 @@ namespace Aura\Asset_Bundle\Domain;
 use Aura\Asset_Bundle\Exception\NotFound;
 
 class AssetService
-{   
+{
     /**
      *
      * The Aura config modes in which we should cache web assets.
@@ -23,40 +23,47 @@ class AssetService
      *
      */
     protected $web_cache_dir;
-    
+
     /**
-     * 
+     *
      * The path to vendor useful for testing
-     * 
+     *
      * @var string $vendor_path
-     * 
+     *
      */
     protected $vendor_path;
-    
+
     /**
-     * 
+     *
      * Constructor.
-     * 
+     *
      * @param Request $request A web request object.
-     * 
+     *
      * @param Response $response A web response object.
-     * 
+     *
      */
-    public function __construct(        
+    public function __construct(
+        array $vendor_paths,
         $web_cache_dir,
-        $vendor_path,
         $config_mode = 'prod',
         $cache_config_modes = array()
     ) {
+        $this->vendor_paths = $vendor_paths;
         $this->web_cache_dir = $web_cache_dir;
-        $this->vendor_path = $vendor_path;
         $this->config_mode = $config_mode;
         $this->cache_config_modes = $cache_config_modes;
     }
 
-    public function setVendorPath($vendor_path)
+    public function addVendorPaths($vendor_paths)
     {
-        $this->vendor_path= $vendor_path;
+        foreach ($vendor_paths as $prefix => $path) {
+            $this->addVendorPath($prefix, $path);
+        }
+    }
+
+    public function addVendorPath($prefix, $path)
+    {
+        $this->vendor_paths[$prefix] = $path;
     }
 
     /**
@@ -72,7 +79,7 @@ class AssetService
     {
         $this->cache_config_modes = $modes;
     }
-    
+
     /**
      *
      * Sets the current config mode
@@ -85,7 +92,7 @@ class AssetService
     public function setCacheConfigMode($config_mode)
     {
         $this->config_mode = $config_mode;
-    }    
+    }
 
     /**
      *
@@ -101,30 +108,25 @@ class AssetService
     {
         $this->web_cache_dir = $dir;
     }
-    
-    public function getAssetContents($vendor, $package, $file, $format)
-    {
-        $realpath = $this->getAssetPath($vendor, $package, $file, $format);
-        $this->cache($realpath, $vendor, $package, $file, $format);
-        return $this->readFile($realpath);
-    }
 
     public function getAssetPath($vendor, $package, $file, $format)
     {
-        $fakepath = $this->vendor_path . DIRECTORY_SEPARATOR .
-            $vendor . DIRECTORY_SEPARATOR .
-            $package . "/web/{$file}{$format}";
-
-        $realpath = realpath($fakepath);
+        $prefix = $vendor . '/' . $package;
+        $realpath = null;
+        if (isset($this->vendor_paths[$prefix])) {
+            $fakepath = $this->vendor_paths[$prefix] .
+                DIRECTORY_SEPARATOR . "{$file}{$format}";
+            $realpath = realpath($fakepath);
+        }
         return $realpath;
-    }    
-    
+    }
+
     public function cache($realpath, $vendor, $package, $file, $format)
     {
         if (! $this->isReadable($realpath)) {
             throw new NotFound("Not Found in path " + $realpath);
         }
-        // are we in a config mode that wants us to cache?        
+        // are we in a config mode that wants us to cache?
         if (in_array($this->config_mode, $this->cache_config_modes)) {
             // copy source to this target cache location
             $webcache = $this->web_cache_dir . DIRECTORY_SEPARATOR
@@ -144,19 +146,6 @@ class AssetService
         }
     }
 
-    public function readFile($realpath)
-    {
-        if (! $this->isReadable($realpath)) {
-            throw new NotFound("Not Found in path " + $realpath);            
-        }
-        // open the asset file using a shared (read) lock
-        $fh = fopen($realpath, 'rb');
-        $size = filesize($realpath);
-        $contents = fread($fh, $size);
-        fclose($fh);
-        return $contents;
-    }
-    
     public function isReadable($realpath)
     {
         // does the asset file exist?
@@ -164,5 +153,19 @@ class AssetService
             return true;
         }
         return false;
+    }
+    
+    public function readFile($realpath)
+    {
+        if (! $this>isReadable($realpath)) {
+            throw new NotFound("Not Found in path " + $realpath);            
+        }
+        $content = function () use ($realpath) {
+            $file = new SplFileObject($realpath);
+            while (!$file->eof()) {
+                echo $file->fgets();
+            }
+        }
+        return $content;
     }
 }
