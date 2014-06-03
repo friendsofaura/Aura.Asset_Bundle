@@ -16,6 +16,13 @@ class AssetAction
      */
     protected $responder;
     
+    /**
+     * 
+     * Asset service
+     * 
+     * @var AssetService
+     * 
+     */
     protected $asset_service;
     
     /**
@@ -29,24 +36,21 @@ class AssetAction
      */
     public function __construct(        
         AssetResponder $responder,
-        AssetService $asset_service,
-        FormatTypes $format_types
+        AssetService $asset_service        
     ) {        
         $this->responder = $responder;
-        $this->asset_service = $asset_service;
-        $this->format_types = $format_types;
+        $this->asset_service = $asset_service;        
     }
     
     public function __invoke($vendor = null, $package = null, $file = null, $format = null)
     {        
         $asset_path = $this->asset_service->getAssetPath($vendor, $package, $file, $format);
         try {
-            $content = $this->asset_service->readFile($asset_path);
-        } catch (NotFound $e) {
-            $content = "Asset not found: " . $e>getMessage();
-            $this->responder->setStatus('404', 'Not Found', '1.1');
-        }
-        $this->responder->setContent($content);        
+            $data['asset'] = $this->asset_service->readFile($asset_path);
+            $data['format'] = $format;
+            $this->responder->setData($data);
+        } catch (NotFound $e) {            
+        }        
         return $this->responder;
     }
 }

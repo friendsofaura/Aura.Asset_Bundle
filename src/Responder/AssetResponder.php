@@ -24,30 +24,44 @@ class AssetResponder
      * 
      */
     protected $format_types;
+    
+    protected $data;
 
     public function __construct(
-        Response $response        
+        Response $response,
+        FormatTypes $format_types        
     ) {
-        $this->response = $response;        
+        $this->response = $response;
+        $this->format_types = $format_types;
     }
-    
-    public function setContent()
+
+    public function setData($data)
     {
-        $this->content = $content;
-    }
-    
-    public function setContentType($content_type)
-    {        
-        $this->response->headers->set('Content-Type', $content_type);
-    }
-    
-    public function setStatus($status_code, $status_message, $http_version = '1.1')
-    {        
-        $this->response->status->set($status_code, $status_message, $http_version);
-    }
+        $this->data = (object) $data;
+    }    
     
     public function __invoke()
     {
-        $this->response->content->set($this->content);
+        $responded = $this->notFound('asset')
+                  || $this->responseView();
+
+        if ($responded) {
+            return $this->response;
+        }        
+    }
+
+    protected function notFound($key)
+    {
+        if (! $this->data->$key) {
+            $this->response->status->set(404);
+            return $this->response;
+        }
+    }
+    
+    protected function responseView()
+    {
+        $this->response->headers->set('Content-Type', $this->format_types->getContentType($this->data->format));
+        $this->response->content->set($this->data->asset);
+        return $this->response;
     }
 }
