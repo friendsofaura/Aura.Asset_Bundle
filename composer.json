@@ -12,6 +12,9 @@
     "require": {
         "aura/web":"2.*@dev"
     },
+    "require-dev": {
+        "mikey179/vfsStream": "~1.2"
+    },
     "autoload": {
         "psr-4": {
             "Aura\\Asset_Bundle\\":"src/",
