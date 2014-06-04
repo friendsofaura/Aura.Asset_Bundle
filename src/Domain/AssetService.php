@@ -57,6 +57,7 @@ class AssetService
     public function addVendorPaths($vendor_paths)
     {
         foreach ($vendor_paths as $prefix => $path) {
+
             $this->addVendorPath($prefix, $path);
         }
     }
@@ -154,11 +155,11 @@ class AssetService
         }
         return false;
     }
-    
+
     public function readFile($realpath)
     {
         if (! $this>isReadable($realpath)) {
-            throw new NotFound("Not Found in path " + $realpath);            
+            throw new NotFound("Not Found in path " + $realpath);
         }
         $content = function () use ($realpath) {
             $file = new SplFileObject($realpath);
