@@ -166,7 +166,7 @@ class AssetService
             while (!$file->eof()) {
                 echo $file->fgets();
             }
-        }
+        };
         return $content;
     }
 }
