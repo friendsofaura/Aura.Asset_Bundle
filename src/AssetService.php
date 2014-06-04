@@ -44,10 +44,8 @@ class AssetService
      * @param array $types Overrides to the media type mappings.
      *
      */
-    public function __construct(
-        array $map,
-        $types = array(),
-    ) {
+    public function __construct(array $map, $types = array())
+    {
         $this->map = $map;
         $this->types = array_merge($this->types, $types);
     }
@@ -94,7 +92,7 @@ class AssetService
     {
         $key = "{$vendor}/{$package}";
         if (isset($this->map[$key])) {
-            $dir = rtrim(DIRECTORY_SEPARATOR, $this->map[$key]);
+            $dir = rtrim($this->map[$key], DIRECTORY_SEPARATOR);
             return realpath($dir . DIRECTORY_SEPARATOR . $file);
         }
     }
