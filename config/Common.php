@@ -8,43 +8,33 @@ class Common extends Config
 {
     public function define(Container $di)
     {
-        $di->params['Aura\Asset_Bundle\Domain\AssetService'] = array(
-            'vendor_paths' => array(
-
-            ),
-            'web_cache_dir' => dirname(__DIR__),
-            'config_mode' => 'prod',
-            'cache_config_modes' => array('staging', 'prod')
+        $di->params['Aura\Asset_Bundle\AssetService'] = array(
+            'map' => array(),
+            'types' => array(),
         );
 
-        $di->params['Aura\Asset_Bundle\Responder\AssetResponder'] = array(
+        $di->params['Aura\Asset_Bundle\AssetResponder'] = array(
             'response' => $di->lazyGet('web_response'),
-            'format_types' => $di->lazyNew('Aura\Asset\FormatTypes')
         );
 
-        $di->params['Aura\Asset_Bundle\Action\AssetAction'] = array(
-            'responder' => $di->lazyNew('Aura\Asset_Bundle\Responder\AssetResponder'),
-            'asset_service' => $di->lazyNew('Aura\Asset_Bundle\Domain\AssetService')
+        $di->params['Aura\Asset_Bundle\AssetAction'] = array(
+            'domain' => $di->lazyNew('Aura\Asset_Bundle\AssetService')
+            'responder' => $di->lazyNew('Aura\Asset_Bundle\AssetResponder'),
         );
     }
 
     public function modify(Container $di)
     {
         $router = $di->get('web_router');
-
-        $dispatcher = $di->get('web_dispatcher');
-
-        $router->add('aura.asset', '/asset/{vendor}/{package}/{file}{format}')
+        $router->add('aura.asset', '/asset/{vendor}/{package}/{file}')
             ->setValues([
                 'controller' => 'aura.asset',
             ])
-            ->addTokens(
-                array(
-                    'file' => '(.*?)',
-                    'format' => '(\.[^/]+)?'
-                )
-            );
+            ->addTokens(array(
+                'file' => '(.*)'
+            ));
 
+        $dispatcher = $di->get('web_dispatcher');
         $dispatcher->setObject(
             'aura.asset',
             $di->lazyNew('Aura\Asset_Bundle\Action\AssetAction')
