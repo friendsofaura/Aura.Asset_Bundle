@@ -22,6 +22,15 @@ class AssetResponder
 
     /**
      *
+     * Data for modifying the response.
+     *
+     * @var object
+     *
+     */
+    protected $data;
+
+    /**
+     *
      * Constructor.
      *
      * @param Response $response A web response object.
@@ -30,6 +39,34 @@ class AssetResponder
     public function __construct(Response $response)
     {
         $this->response = $response;
+        $this->data = (object) array();
+    }
+
+    /**
+     *
+     * Sets data for modifying the response.
+     *
+     * @param mixed $data Data for modifying the response; will be cast to an
+     * object.
+     *
+     * @return null
+     *
+     */
+    public function setData($data)
+    {
+        $this->data = (object) $data;
+    }
+
+    /**
+     *
+     * Gets data for modifying the response.
+     *
+     * @return object
+     *
+     */
+    public function getData()
+    {
+        return $this->data;
     }
 
     /**
@@ -43,10 +80,13 @@ class AssetResponder
      * @return Response
      *
      */
-    public function __invoke($path, $type)
+    public function __invoke()
     {
-        if ($path) {
-            $this->ok($path, $type);
+        if (isset($this->data->asset->path)) {
+            $this->ok(
+                $this->data->asset->path,
+                $this->data->asset->type
+            );
         } else {
             $this->notFound();
         }

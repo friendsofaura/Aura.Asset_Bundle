@@ -25,24 +25,17 @@ class AssetActionTest extends \PHPUnit_Framework_TestCase
 
     public function test__invoke()
     {
-        $response = $this->action->__invoke('vendor', 'package', 'style.css');
+        $responder = $this->action->__invoke('vendor', 'package', 'style.css');
 
-        $this->assertInstanceOf('Aura\Web\Response', $response);
+        $this->assertInstanceOf('Aura\Asset_Bundle\AssetResponder', $responder);
 
-        $actual = $response->status->getCode();
-        $this->assertSame(200, $actual);
-
-        $expect = 'text/css';
-        $actual = $response->content->getType();
-        $this->assertSame($expect, $actual);
-
-        $content = $response->content->get();
-        ob_start();
-        $content();
-        $actual = ob_get_clean();
-
-        $path = $this->asset_dir. DIRECTORY_SEPARATOR . 'style.css';
-        $expect = file_get_contents($path);
-        $this->assertSame($expect, $actual);
+        $actual = $responder->getData();
+        $expect = (object) array(
+            'asset' => (object) array(
+                'path' => $this->asset_dir . DIRECTORY_SEPARATOR . 'style.css',
+                'type' => 'text/css',
+            )
+        );
+        $this->assertEquals($expect, $actual);
     }
 }

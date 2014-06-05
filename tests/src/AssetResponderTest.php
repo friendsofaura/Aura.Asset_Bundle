@@ -21,7 +21,17 @@ class AssetResponderTest extends \PHPUnit_Framework_TestCase
     {
         $path = $this->asset_dir. DIRECTORY_SEPARATOR . 'style.css';
         $type = 'text/css';
-        $response = $this->responder->__invoke($path, $type);
+
+        $asset = (object) array(
+            'path' => $path,
+            'type' => $type,
+        );
+
+        $this->responder->setData(array(
+            'asset' => $asset,
+        ));
+
+        $response = $this->responder->__invoke();
 
         $this->assertInstanceOf('Aura\Web\Response', $response);
 
