@@ -59,6 +59,7 @@ class AssetAction
     public function __invoke($vendor, $package, $file)
     {
         $asset = $this->domain->getAsset($vendor, $package, $file);
-        return $this->responder->__invoke($asset->path, $asset->type);
+        $this->responder->setData(array('asset' => $asset));
+        return $this->responder;
     }
 }
