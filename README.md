@@ -66,3 +66,21 @@ to `/asset/vendor/package/css/some.css`, `/asset/vendor/package/js/hello.js`, `/
 Onething you still need to make sure in the name `asset/vendor/package`
 
 > `vendor/package` which is the composer package name.
+
+## Usage in Aura.Web_Project
+
+Example of usage
+
+```php
+// in your config/Common.php
+$di->params['Aura\Asset_Bundle\AssetService']['map'] = array(
+    'hari/user-bundle' => dirname(__DIR__) . '/web'
+);
+$di->params['Aura\Asset_Bundle\AssetService']['types'] = array();
+```
+
+In your layout or view
+
+```php
+<link href="/asset/hari/user-bundle/css/bootstrap.min.css" rel="stylesheet">
+```

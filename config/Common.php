@@ -8,10 +8,9 @@ class Common extends Config
 {
     public function define(Container $di)
     {
-        $di->params['Aura\Asset_Bundle\AssetService'] = array(
-            'map' => array(),
-            'types' => array(),
-        );
+        // set your configuration accordingly
+        // $di->params['Aura\Asset_Bundle\AssetService']['types'] = array();
+        // $di->params['Aura\Asset_Bundle\AssetService']['map'] = array();
 
         $di->params['Aura\Asset_Bundle\AssetResponder'] = array(
             'response' => $di->lazyGet('web_response'),
@@ -37,7 +36,7 @@ class Common extends Config
         $dispatcher = $di->get('web_dispatcher');
         $dispatcher->setObject(
             'aura.asset',
-            $di->lazyNew('Aura\Asset_Bundle\Action\AssetAction')
+            $di->lazyNew('Aura\Asset_Bundle\AssetAction')
         );
     }
 }
