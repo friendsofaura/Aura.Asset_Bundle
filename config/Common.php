@@ -18,7 +18,7 @@ class Common extends Config
         );
 
         $di->params['Aura\Asset_Bundle\AssetAction'] = array(
-            'domain' => $di->lazyNew('Aura\Asset_Bundle\AssetService')
+            'domain' => $di->lazyNew('Aura\Asset_Bundle\AssetService'),
             'responder' => $di->lazyNew('Aura\Asset_Bundle\AssetResponder'),
         );
     }
