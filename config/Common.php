@@ -27,7 +27,7 @@ class Common extends Config
         $router = $di->get('web_router');
         $router->add('aura.asset', '/asset/{vendor}/{package}/{file}')
             ->setValues([
-                'controller' => 'aura.asset',
+                'action' => 'aura.asset',
             ])
             ->addTokens(array(
                 'file' => '(.*)'
