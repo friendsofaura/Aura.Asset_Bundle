@@ -1,0 +1,70 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "f6e75dd613826a11c92a3f69518df6a0",
+    "packages": [
+        {
+            "name": "aura/web",
+            "version": "dev-develop-2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/auraphp/Aura.Web.git",
+                "reference": "2a29c536151ebed7f4317d4421567eb1f734455d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/auraphp/Aura.Web/zipball/2a29c536151ebed7f4317d4421567eb1f734455d",
+                "reference": "2a29c536151ebed7f4317d4421567eb1f734455d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "aura": {
+                    "type": "library",
+                    "config": {
+                        "common": "Aura\\Web\\_Config\\Common"
+                    }
+                },
+                "branch-alias": {
+                    "dev-develop-2": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Aura\\Web\\": "src/",
+                    "Aura\\Web\\_Config\\": "config/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Aura.Web Contributors",
+                    "homepage": "https://github.com/auraphp/Aura.Web/contributors"
+                }
+            ],
+            "description": "Provides web Request and Response objects for use by web controllers and actions. These are representations of the PHP web environment, not HTTP request and response objects proper.",
+            "homepage": "https://github.com/auraphp/Aura.Web",
+            "keywords": [
+                "request",
+                "response"
+            ],
+            "time": "2014-11-07 16:41:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "platform": [],
+    "platform-dev": []
+}

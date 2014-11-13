@@ -17,14 +17,15 @@ This asset-bundle is installable and autoloadable via Composer with the followin
 `require` element in your `composer.json` file:
 
     "require": {
-        "aura/asset-bundle": "2.*@dev"
+        "aura/asset-bundle": "2.*"
     }
 
 ### Tests
 
-@TBD
-
-Go to the `tests/` directory and issue `./phpunit.sh` to run the bundle tests.
+```bash
+composer install
+phpunit -c tests/unit
+```
 
 ### PSR Compliance
 
@@ -67,20 +68,66 @@ Onething you still need to make sure in the name `asset/vendor/package`
 
 > `vendor/package` which is the composer package name.
 
-## Usage in Aura.Web_Project
+## Usage in any project
 
-Example of usage
+Add path to the router, according to the router you are using so that vendor, package and file name can be extracted from it.
+
+
+An example of usage with Aura.Router and Aura.Dispatcher is given below. The dispacther is used for it need to recursively call the `__invoke` method. Else action will return responder, then you need to invoke responder to get the response and finally do send the response.
 
 ```php
-// in your config/Common.php
-$di->params['Aura\Asset_Bundle\AssetService']['map'] = array(
-    'hari/user-bundle' => dirname(__DIR__) . '/web'
+<?php
+$map = array(
+    'my/package' => '/path/to/web/where/css/js/etc/',
+    'my/package2' => '/path/to/web/where/css/js/etc/of/packag2'
 );
-$di->params['Aura\Asset_Bundle\AssetService']['types'] = array();
+$types = array();
+$router->add('aura.asset', '/asset/{vendor}/{package}/{file}')
+    ->setValues([
+        'action' => 'aura.asset',
+    ])
+    ->addTokens(array(
+        'file' => '(.*)'
+    ));
+
+$dispatcher->setObject(
+    'aura.asset',
+    function () use ($map, $types) {
+        $action = new \Aura\Asset_Bundle\AssetAction(
+            new \Aura\Asset_Bundle\AssetService($map, $types),
+            new \Aura\Asset_Bundle\AssetResponder()
+        );
+        return $action;
+    }
+);
 ```
 
 In your layout or view
 
 ```php
-<link href="/asset/hari/user-bundle/css/bootstrap.min.css" rel="stylesheet">
+<link href="/asset/<vendor>/<package>/css/bootstrap.min.css" rel="stylesheet">
+```
+
+## Usage in Aura.Web_Kernel
+
+```php
+<?php
+    // more code
+    public function define(Container $di)
+    {
+        $di->params['Aura\Asset_Bundle\AssetService']['map']['cocoframework/example'] = dirname(__DIR__) . '/web';
+    }
+```
+
+Make sure you have router helper defined for Aura.View.
+
+```php
+<link rel="stylesheet" href="<?php echo $this->router()
+      ->generateRaw('aura.asset',
+          array(
+              'vendor' => 'cocoframework',
+              'package' => 'example',
+              'file' => '/css/syntax.css'
+          )
+      ); ?>">
 ```
