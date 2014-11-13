@@ -22,6 +22,8 @@ This asset-bundle is installable and autoloadable via Composer with the followin
 
 ### Tests
 
+[![Build Status](https://travis-ci.org/harikt/Aura.Asset_Bundle.png?branch=master)](https://travis-ci.org/harikt/Aura.Asset_Bundle)
+
 ```bash
 composer install
 phpunit -c tests/unit
